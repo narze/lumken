@@ -26,5 +26,22 @@
     "scripts": ["js/vendor.js", "js/background.js"]
   },
 
-  "permissions": ["storage", "<all_urls>", "contextMenus", "activeTab"]
+  "permissions": ["storage", "<all_urls>", "contextMenus", "activeTab"],
+
+  "commands": {
+    "expand": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Expand text input"
+    },
+    "unexpand": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "Command+Shift+K"
+      },
+      "description": "Un-expand text input"
+    }
+  }
 }
