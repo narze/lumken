@@ -1,3 +1,4 @@
+import axios from "axios"
 import React, { useEffect, useState } from "react"
 import ReactDOM from "react-dom"
 
@@ -14,23 +15,6 @@ const Popup = () => {
       setCurrentURL(tabs[0].url)
     })
   }, [])
-
-  const changeBackground = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const tab = tabs[0]
-      if (tab.id) {
-        chrome.tabs.sendMessage(
-          tab.id,
-          {
-            color: "#555555",
-          },
-          (msg) => {
-            console.log("result message:", msg)
-          }
-        )
-      }
-    })
-  }
 
   const expandText = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -82,12 +66,49 @@ const Popup = () => {
       }
     })
   }
+  const puan = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0]
+      if (tab.id) {
+        chrome.tabs.sendMessage(
+          tab.id,
+          {
+            type: "puan",
+          },
+          async (msg) => {
+            const response = await axios.get(
+              `https://kampuan-api.herokuapp.com/puan_kam/${msg}?all=false`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                },
+              }
+              // { mode: "no-cors", headers: [["accept", "application/json"]],  }
+            )
+            // console.log("result message:", msg)
+            const text = response.data.results.join("")
+
+            chrome.tabs.sendMessage(
+              tab.id as number,
+              {
+                type: "puan_result",
+                text,
+              },
+              (msg) => {}
+            )
+          }
+        )
+      }
+    })
+  }
 
   return (
     <>
       <button onClick={expandText}>E X P A N D !</button>
       <button onClick={unexpandText}>UNEXPAND</button>
       <button onClick={skoyIfy}>Skoy-ify</button>
+      <button onClick={puan}>Puan</button>
     </>
   )
 }
