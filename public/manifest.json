@@ -28,6 +28,8 @@
 
   "permissions": ["storage", "<all_urls>", "contextMenus", "activeTab"],
 
+  "host_permissions": ["https://kampuan-api.herokuapp.com/"],
+
   "commands": {
     "expand": {
       "suggested_key": {
@@ -49,6 +51,13 @@
         "mac": "Command+Shift+I"
       },
       "description": "Skoy-ify text input"
+    },
+    "puan": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+O",
+        "mac": "Command+Shift+O"
+      },
+      "description": "Puan text input"
     }
   }
 }

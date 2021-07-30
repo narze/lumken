@@ -1,3 +1,5 @@
+import axios from "axios"
+
 function polling() {
   // console.log("polling");
   setTimeout(polling, 1000 * 30)
@@ -73,6 +75,41 @@ chrome.commands.onCommand.addListener((command) => {
             },
             (msg) => {
               // console.log("result message:", msg)
+            }
+          )
+        }
+      })
+    case "puan":
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        const tab = tabs[0]
+        if (tab.id) {
+          chrome.tabs.sendMessage(
+            tab.id,
+            {
+              type: "puan",
+            },
+            async (msg) => {
+              const response = await axios.get(
+                `https://kampuan-api.herokuapp.com/puan_kam/${msg}?all=false`,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                  },
+                }
+                // { mode: "no-cors", headers: [["accept", "application/json"]],  }
+              )
+              // console.log("result message:", msg)
+              const text = response.data.results.join("")
+
+              chrome.tabs.sendMessage(
+                tab.id as number,
+                {
+                  type: "puan_result",
+                  text,
+                },
+                (msg) => {}
+              )
             }
           )
         }
