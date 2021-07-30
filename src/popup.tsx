@@ -66,22 +66,28 @@ const Popup = () => {
     })
   }
 
+  const skoyIfy = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0]
+      if (tab.id) {
+        chrome.tabs.sendMessage(
+          tab.id,
+          {
+            type: "skoyify",
+          },
+          (msg) => {
+            // console.log("result message:", msg)
+          }
+        )
+      }
+    })
+  }
+
   return (
     <>
-      {/* <ul style={{ minWidth: "700px" }}>
-        <li>Current URL: {currentURL}</li>
-        <li>Current Time: {new Date().toLocaleTimeString()}</li>
-        <li>สวัสดีครับ</li>
-      </ul>
-      <button
-        onClick={() => setCount(count + 1)}
-        style={{ marginRight: "5px" }}
-      >
-        count up
-      </button>
-      <button onClick={changeBackground}>change background</button> */}
       <button onClick={expandText}>E X P A N D !</button>
       <button onClick={unexpandText}>UNEXPAND</button>
+      <button onClick={skoyIfy}>Skoy-ify</button>
     </>
   )
 }

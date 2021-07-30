@@ -1,17 +1,27 @@
+import Skoy from "skoy"
 let currentInput: any
 
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   if (msg.type === "expand_input") {
     if (currentInput) {
-      const expandedText = currentInput.value.split("").join(" ")
+      const transformedText = currentInput.value.split("").join(" ")
 
-      currentInput.value = expandedText
+      currentInput.value = transformedText
+      currentInput.dispatchEvent(new Event("change", { bubbles: true }))
     }
   } else if (msg.type === "unexpand_input") {
     if (currentInput) {
-      const unexpandedText = currentInput.value.split(" ").join("")
+      const transformedText = currentInput.value.split(" ").join("")
 
-      currentInput.value = unexpandedText
+      currentInput.value = transformedText
+      currentInput.dispatchEvent(new Event("change", { bubbles: true }))
+    }
+  } else if (msg.type === "skoyify") {
+    if (currentInput) {
+      const transformedText = Skoy.convert(currentInput.value)
+
+      currentInput.value = transformedText
+      currentInput.dispatchEvent(new Event("change", { bubbles: true }))
     }
   } else if (msg.type === "expand") {
     console.log("Received text = " + msg.text)

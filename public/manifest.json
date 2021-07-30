@@ -42,6 +42,13 @@
         "mac": "Command+Shift+K"
       },
       "description": "Un-expand text input"
+    },
+    "skoyify": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+I",
+        "mac": "Command+Shift+I"
+      },
+      "description": "Skoy-ify text input"
     }
   }
 }

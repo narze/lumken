@@ -30,7 +30,6 @@ chrome.contextMenus.create({
 })
 
 chrome.commands.onCommand.addListener((command) => {
-  console.log(`Command: ${command}`)
   switch (command) {
     case "expand":
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -56,6 +55,21 @@ chrome.commands.onCommand.addListener((command) => {
             tab.id,
             {
               type: "unexpand_input",
+            },
+            (msg) => {
+              // console.log("result message:", msg)
+            }
+          )
+        }
+      })
+    case "skoyify":
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        const tab = tabs[0]
+        if (tab.id) {
+          chrome.tabs.sendMessage(
+            tab.id,
+            {
+              type: "skoyify",
             },
             (msg) => {
               // console.log("result message:", msg)
