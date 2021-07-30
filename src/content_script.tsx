@@ -25,12 +25,24 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
   }
 })
 
+document.body.addEventListener("click", function (e) {
+  const element = e.target as HTMLElement
+
+  if (["INPUT", "TEXTAREA"].includes(element.tagName)) {
+    currentInput = element
+  }
+})
+
 document.body.addEventListener("focusin", function (e) {
   const element = e.target as HTMLElement
 
-  if (element.tagName == "INPUT") {
+  if (["INPUT", "TEXTAREA"].includes(element.tagName)) {
     currentInput = element
   }
-
-  console.log("currentInput", currentInput)
 })
+
+if (document.activeElement) {
+  if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+    currentInput = document.activeElement
+  }
+}
