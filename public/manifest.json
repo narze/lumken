@@ -42,12 +42,12 @@
       },
       "description": "Expand text input"
     },
-    "unexpand": {
+    "leet": {
       "suggested_key": {
         "default": "Ctrl+Shift+K",
         "mac": "Command+Shift+K"
       },
-      "description": "Un-expand text input"
+      "description": "Leet text input"
     },
     "skoyify": {
       "suggested_key": {
