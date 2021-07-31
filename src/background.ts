@@ -33,6 +33,22 @@ chrome.contextMenus.create({
 
 chrome.commands.onCommand.addListener((command) => {
   switch (command) {
+    case "leet":
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        const tab = tabs[0]
+        if (tab.id) {
+          chrome.tabs.sendMessage(
+            tab.id,
+            {
+              type: "leet_input",
+            },
+            (msg) => {
+              // console.log("result message:", msg)
+            }
+          )
+        }
+      })
+      break
     case "expand":
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         const tab = tabs[0]

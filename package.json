@@ -20,7 +20,8 @@
     "axios": "^0.21.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "skoy": "^0.3.1"
+    "skoy": "^0.3.1",
+    "twind": "^0.16.16"
   },
   "devDependencies": {
     "@types/chrome": "0.0.143",

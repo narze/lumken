@@ -1,20 +1,29 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import ReactDOM from "react-dom"
+import "twind/shim"
 
 const Popup = () => {
-  const [count, setCount] = useState(0)
-  const [currentURL, setCurrentURL] = useState<string>()
-
   useEffect(() => {
-    chrome.browserAction.setBadgeText({ text: count.toString() })
-  }, [count])
-
-  useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      setCurrentURL(tabs[0].url)
-    })
+    chrome.browserAction.setBadgeText({ text: "" })
   }, [])
+
+  const leetText = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0]
+      if (tab.id) {
+        chrome.tabs.sendMessage(
+          tab.id,
+          {
+            type: "leet_input",
+          },
+          (msg) => {
+            // console.log("result message:", msg)
+          }
+        )
+      }
+    })
+  }
 
   const expandText = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -104,12 +113,18 @@ const Popup = () => {
   }
 
   return (
-    <>
-      <button onClick={expandText}>E X P A N D !</button>
-      <button onClick={unexpandText}>UNEXPAND</button>
-      <button onClick={skoyIfy}>Skoy-ify</button>
-      <button onClick={puan}>Puan</button>
-    </>
+    <main className="w-80 h-80 p-4">
+      <h1 className="text-3xl text-blue-300">
+        เล่นคำ<span className="text-red-300">ลำเค็ญ</span>
+      </h1>
+      <button onClick={leetText}>โหมด!กม!มos์</button>
+      <button onClick={expandText} className="bg-red-400">
+        โหมดพ รี่ ค า ซึ ย ะ
+      </button>
+      <button onClick={skoyIfy}>โหมฎสก๊อยษ์ฌ์</button>
+      <button onClick={puan}>โหมดผำควน</button>
+      {/* <button onClick={unexpandText}>UNEXPAND</button> */}
+    </main>
   )
 }
 

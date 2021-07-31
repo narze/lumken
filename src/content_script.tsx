@@ -3,12 +3,39 @@ import axios from "axios"
 
 let currentInput: any
 
+function leetify(input: string) {
+  return input
+    .replace(/อ/g, "o")
+    .replace(/[ไใ]/g, "1")
+    .replace(/เ/g, "!")
+    .replace(/แ/g, "ll")
+    .replace(/ะ/g, "=")
+    .replace(/[พผ]/g, "w")
+    .replace(/่/g, "'")
+    .replace(/ย/g, "e")
+    .replace(/ล/g, "a")
+    .replace(/ง/g, "J")
+    .replace(/ท/g, "n")
+    .replace(/ร/g, "s")
+    .replace(/น/g, "u")
+    .replace(/[ัิ]/g, "^")
+}
+
 chrome.runtime.onMessage.addListener(async function (
   msg,
   sender,
   sendResponse
 ) {
-  if (msg.type === "expand_input") {
+  if (msg.type === "leet_input") {
+    console.log({ currentInput })
+    if (currentInput) {
+      const transformedText = leetify(
+        currentInput?.value || currentInput.textContent
+      )
+
+      replaceText(transformedText, currentInput)
+    }
+  } else if (msg.type === "expand_input") {
     console.log({ currentInput })
     if (currentInput) {
       const transformedText = (currentInput?.value || currentInput.textContent)
