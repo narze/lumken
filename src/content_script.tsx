@@ -39,9 +39,10 @@ chrome.runtime.onMessage.addListener(async function (
     console.log({ currentInput })
     if (currentInput) {
       const transformedText = (currentInput?.value || currentInput.textContent)
+        .replace(/ำ/g, "ํา")
         .split("")
         .join(" ")
-        .replace(/ ([ั่้๊๋์ิืึุูี็])/g, "$1")
+        .replace(/ ([ํั่้๊๋์ิืึุูี็])/g, "$1")
 
       replaceText(transformedText, currentInput)
     }
