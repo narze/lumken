@@ -1,9 +1,12 @@
 import axios from "axios"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import ReactDOM from "react-dom"
 import "twind/shim"
 
 const Popup = () => {
+  const [modeIdx, setModeIdx] = useState(0)
+  const [modes, setModes] = useState<any>([])
+
   useEffect(() => {
     chrome.browserAction.setBadgeText({ text: "" })
   }, [])
@@ -112,18 +115,76 @@ const Popup = () => {
     })
   }
 
+  useEffect(() => {
+    chrome.commands.getAll((commands) => {
+      const modes = [
+        {
+          key: "leet",
+          label: "!กม!มos์oมตีu",
+          onClick: leetText,
+          shortcut: "",
+        },
+        {
+          key: "expand",
+          label: " พ รี่ ค า ซึ ย ะ",
+          onClick: expandText,
+          shortcut: "",
+        },
+        {
+          key: "skoyify",
+          label: "สก๊อยษ์ฌ์ซ์ว์",
+          onClick: skoyIfy,
+          shortcut: "",
+        },
+        { key: "puan", label: "ควนผำ", onClick: puan, shortcut: "" },
+      ]
+
+      modes.forEach(({ key }, idx) => {
+        const matchedCommand = commands.find(({ name }) => name === key)
+        if (matchedCommand) {
+          modes[idx].shortcut = matchedCommand.shortcut || ""
+        }
+      })
+
+      setModes(modes)
+    })
+  }, [])
+
+  const currentMode = useMemo(() => modes[modeIdx], [modeIdx, modes])
+  //   0: {description: "", name: "_execute_browser_action", shortcut: ""}
+  // 1: {description: "Expand text input", name: "expand", shortcut: "⇧⌘L"}
+  // 2: {description: "Puan text input", name: "puan", shortcut: "⇧⌘O"}
+  // 3: {description: "Skoy-ify text input", name: "skoyify", shortcut: "⇧⌘I"}
+  // 4: {description: "Un-expand text input", name: "unexpand", shortcut: "⇧⌘K"}
+
   return (
-    <main className="w-80 h-80 p-4">
+    <main className="w-80 h-80 p-4 flex flex-col gap-4">
       <h1 className="text-3xl text-blue-300">
-        เล่นคำ<span className="text-red-300">ลำเค็ญ</span>
+        <span className="text-red-100 text-opacity-40 text-2xl">หมวย</span>
+        เล่นคำ
+        <span className="text-red-300">ลำเค็ญ</span>
       </h1>
-      <button onClick={leetText}>โหมด!กม!มos์</button>
-      <button onClick={expandText} className="bg-red-400">
-        โหมดพ รี่ ค า ซึ ย ะ
+
+      {currentMode && (
+        <button
+          onClick={currentMode.onClick}
+          className="text-yellow-600 flex-1 text-2xl border rounded"
+        >
+          โหมด<span className="text-blue-300">{currentMode.label}</span>
+          {currentMode.shortcut && (
+            <div className="text-gray-400 text-base">
+              ({currentMode.shortcut})
+            </div>
+          )}
+        </button>
+      )}
+
+      <button
+        onClick={() => setModeIdx((modeIdx + 1) % modes.length)}
+        className="p-2 bg-green-200 rounded text-base font-bold"
+      >
+        เปลี่ยนโหมด
       </button>
-      <button onClick={skoyIfy}>โหมฎสก๊อยษ์ฌ์</button>
-      <button onClick={puan}>โหมดผำควน</button>
-      {/* <button onClick={unexpandText}>UNEXPAND</button> */}
     </main>
   )
 }
