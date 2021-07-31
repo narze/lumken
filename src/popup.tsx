@@ -151,11 +151,6 @@ const Popup = () => {
   }, [])
 
   const currentMode = useMemo(() => modes[modeIdx], [modeIdx, modes])
-  //   0: {description: "", name: "_execute_browser_action", shortcut: ""}
-  // 1: {description: "Expand text input", name: "expand", shortcut: "⇧⌘L"}
-  // 2: {description: "Puan text input", name: "puan", shortcut: "⇧⌘O"}
-  // 3: {description: "Skoy-ify text input", name: "skoyify", shortcut: "⇧⌘I"}
-  // 4: {description: "Un-expand text input", name: "unexpand", shortcut: "⇧⌘K"}
 
   return (
     <main className="w-80 h-80 p-4 flex flex-col gap-4">
@@ -168,14 +163,13 @@ const Popup = () => {
       {currentMode && (
         <button
           onClick={currentMode.onClick}
-          className="text-yellow-600 flex-1 text-2xl border rounded"
+          className="relative text-yellow-600 flex-1 text-2xl border rounded"
         >
           โหมด<span className="text-blue-300">{currentMode.label}</span>
-          {currentMode.shortcut && (
-            <div className="text-gray-400 text-base">
-              ({currentMode.shortcut})
-            </div>
-          )}
+          <div className="text-gray-400 text-base">{currentMode.shortcut}</div>
+          <div className="absolute right-1 bottom-1 text-gray-300 text-sm">
+            (Click to apply)
+          </div>
         </button>
       )}
 
