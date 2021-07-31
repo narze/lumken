@@ -4,8 +4,10 @@ import ReactDOM from "react-dom"
 import "twind/shim"
 
 const Popup = () => {
-  const [modeIdx, setModeIdx] = useState(0)
+  const [modeIdx, setModeIdx] = useState(localStorage.LUMKEN_MODE || 0)
   const [modes, setModes] = useState<any>([])
+
+  useEffect(() => (localStorage.LUMKEN_MODE = modeIdx), [modeIdx])
 
   useEffect(() => {
     chrome.browserAction.setBadgeText({ text: "" })
@@ -96,9 +98,7 @@ const Popup = () => {
                   "Access-Control-Allow-Origin": "*",
                 },
               }
-              // { mode: "no-cors", headers: [["accept", "application/json"]],  }
             )
-            // console.log("result message:", msg)
             const text = response.data.results.join("")
 
             chrome.tabs.sendMessage(
