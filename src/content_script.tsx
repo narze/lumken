@@ -9,34 +9,37 @@ chrome.runtime.onMessage.addListener(async function (
   sendResponse
 ) {
   if (msg.type === "expand_input") {
+    console.log({ currentInput })
     if (currentInput) {
-      const transformedText = currentInput.value.split("").join(" ")
+      const transformedText = (currentInput?.value || currentInput.textContent)
+        .split("")
+        .join(" ")
 
-      currentInput.value = transformedText
-      currentInput.dispatchEvent(new Event("change", { bubbles: true }))
+      replaceText(transformedText, currentInput)
     }
   } else if (msg.type === "unexpand_input") {
     if (currentInput) {
-      const transformedText = currentInput.value.split(" ").join("")
+      const transformedText = (currentInput?.value || currentInput.textContent)
+        .split(" ")
+        .join("")
 
-      currentInput.value = transformedText
-      currentInput.dispatchEvent(new Event("change", { bubbles: true }))
+      replaceText(transformedText, currentInput)
     }
   } else if (msg.type === "skoyify") {
     if (currentInput) {
-      const transformedText = Skoy.convert(currentInput.value)
+      const transformedText = Skoy.convert(
+        currentInput?.value || currentInput.textContent
+      )
 
-      currentInput.value = transformedText
-      currentInput.dispatchEvent(new Event("change", { bubbles: true }))
+      replaceText(transformedText, currentInput)
     }
   } else if (msg.type === "puan") {
     if (currentInput) {
-      sendResponse(currentInput.value)
+      sendResponse(currentInput?.value || currentInput.textContent)
     }
   } else if (msg.type === "puan_result") {
     if (currentInput) {
-      currentInput.value = msg.text
-      currentInput.dispatchEvent(new Event("change", { bubbles: true }))
+      replaceText(msg.text, currentInput)
     }
   } else if (msg.type === "expand") {
     console.log("Received text = " + msg.text)
@@ -53,21 +56,79 @@ chrome.runtime.onMessage.addListener(async function (
 document.body.addEventListener("click", function (e) {
   const element = e.target as HTMLElement
 
-  if (["INPUT", "TEXTAREA"].includes(element.tagName)) {
-    currentInput = element
-  }
+  currentInput = element
 })
 
 document.body.addEventListener("focusin", function (e) {
   const element = e.target as HTMLElement
 
-  if (["INPUT", "TEXTAREA"].includes(element.tagName)) {
-    currentInput = element
-  }
+  currentInput = element
 })
 
 if (document.activeElement) {
-  if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
-    currentInput = document.activeElement
+  currentInput = document.activeElement
+}
+
+// function insertTextAtCursor(text: string) {
+//   var el = document.activeElement as any
+//   var val = el.value
+//   var endIndex
+//   var range
+//   var doc = el.ownerDocument
+//   if (
+//     typeof el.selectionStart === "number" &&
+//     typeof el.selectionEnd === "number"
+//   ) {
+//     endIndex = el.selectionEnd
+//     el.value = val.slice(0, endIndex) + text + val.slice(endIndex)
+//     el.selectionStart = el.selectionEnd = endIndex + text.length
+//   } else if (doc.selection !== "undefined" && doc.selection.createRange) {
+//     el.focus()
+//     range = doc.selection.createRange()
+//     range.collapse(false)
+//     range.text = text
+//     range.select()
+//   }
+// }
+
+function replaceText(text: string, element: any) {
+  if (element.value) {
+    element.value = text
+  } else if (element.textContent) {
+    const xpath = `//*[text()='${element.textContent}']`
+    console.log({ xpath })
+    const matchingElement = document.evaluate(
+      xpath,
+      element,
+      null,
+      XPathResult.FIRST_ORDERED_NODE_TYPE,
+      null
+    ).singleNodeValue
+
+    if (matchingElement) {
+      console.log({ matchingElement })
+      matchingElement.textContent = text
+
+      // TODO: Trigger change event so that the input persists in the DOM
+      // Now you can press space once instead
+    }
   }
+
+  const key =
+    navigator.platform.toUpperCase().indexOf("MAC") >= 0 ? "Meta" : "Control"
+
+  element.dispatchEvent(
+    new KeyboardEvent("keyup", {
+      key,
+      bubbles: true,
+    })
+  )
+
+  element.dispatchEvent(
+    new Event("change", {
+      bubbles: true,
+    })
+  )
+
+  document.execCommand("paste")
 }

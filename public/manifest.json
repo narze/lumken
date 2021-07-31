@@ -26,9 +26,13 @@
     "scripts": ["js/vendor.js", "js/background.js"]
   },
 
-  "permissions": ["storage", "<all_urls>", "contextMenus", "activeTab"],
-
-  "host_permissions": ["https://kampuan-api.herokuapp.com/"],
+  "permissions": [
+    "storage",
+    "<all_urls>",
+    "contextMenus",
+    "activeTab",
+    "https://kampuan-api.herokuapp.com/"
+  ],
 
   "commands": {
     "expand": {
