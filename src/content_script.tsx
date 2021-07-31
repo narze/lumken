@@ -1,5 +1,5 @@
 import Skoy from "skoy"
-import axios from "axios"
+import "./styles.css"
 
 let currentInput: any
 
@@ -131,9 +131,13 @@ if (document.activeElement) {
 function replaceText(text: string, element: any) {
   if (element.value) {
     element.value = text
+    element.classList.add("lumken-shake")
+
+    setTimeout(() => {
+      element.classList.remove("lumken-shake")
+    }, 200)
   } else if (element.textContent) {
     const xpath = `//*[text()='${element.textContent}']`
-    console.log({ xpath })
     const matchingElement = document.evaluate(
       xpath,
       element,
@@ -143,8 +147,12 @@ function replaceText(text: string, element: any) {
     ).singleNodeValue
 
     if (matchingElement) {
-      console.log({ matchingElement })
       matchingElement.textContent = text
+      ;(matchingElement as any).classList.add("lumken-shake")
+
+      setTimeout(() => {
+        ;(matchingElement as any).classList.remove("lumken-shake")
+      }, 200)
 
       // TODO: Trigger change event so that the input persists in the DOM
       // Now you can press space once instead

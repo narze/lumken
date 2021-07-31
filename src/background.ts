@@ -23,7 +23,7 @@ chrome.contextMenus.create({
             type: "expand_input",
           },
           (msg) => {
-            // console.log("result message:", msg)
+            console.log(msg)
           }
         )
       }
@@ -43,7 +43,7 @@ chrome.commands.onCommand.addListener((command) => {
               type: "leet_input",
             },
             (msg) => {
-              // console.log("result message:", msg)
+              console.log(msg)
             }
           )
         }
@@ -59,7 +59,7 @@ chrome.commands.onCommand.addListener((command) => {
               type: "expand_input",
             },
             (msg) => {
-              // console.log("result message:", msg)
+              console.log(msg)
             }
           )
         }
@@ -75,11 +75,12 @@ chrome.commands.onCommand.addListener((command) => {
               type: "unexpand_input",
             },
             (msg) => {
-              // console.log("result message:", msg)
+              console.log(msg)
             }
           )
         }
       })
+      break
     case "skoyify":
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         const tab = tabs[0]
@@ -90,11 +91,12 @@ chrome.commands.onCommand.addListener((command) => {
               type: "skoyify",
             },
             (msg) => {
-              // console.log("result message:", msg)
+              console.log(msg)
             }
           )
         }
       })
+      break
     case "puan":
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         const tab = tabs[0]
@@ -122,12 +124,15 @@ chrome.commands.onCommand.addListener((command) => {
                   type: "puan_result",
                   text,
                 },
-                (msg) => {}
+                (msg) => {
+                  console.log(msg)
+                }
               )
             }
           )
         }
       })
+      break
     case "lu":
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         const tab = tabs[0]
@@ -155,12 +160,15 @@ chrome.commands.onCommand.addListener((command) => {
                   type: "lu_result",
                   text,
                 },
-                (msg) => {}
+                (msg) => {
+                  console.log(msg)
+                }
               )
             }
           )
         }
       })
+      break
     default:
       break
   }
