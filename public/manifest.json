@@ -62,6 +62,9 @@
         "mac": "Command+Shift+O"
       },
       "description": "Puan text input"
+    },
+    "lu": {
+      "description": "Lu text input"
     }
   }
 }

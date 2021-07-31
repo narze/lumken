@@ -70,6 +70,14 @@ chrome.runtime.onMessage.addListener(async function (
     if (currentInput) {
       replaceText(msg.text, currentInput)
     }
+  } else if (msg.type === "lu") {
+    if (currentInput) {
+      sendResponse(currentInput?.value || currentInput.textContent)
+    }
+  } else if (msg.type === "lu_result") {
+    if (currentInput) {
+      replaceText(msg.text, currentInput)
+    }
   } else if (msg.type === "expand") {
     console.log("Received text = " + msg.text)
     sendResponse(`expanded to : ${msg.text.split("").join("xxxxxx")}`)

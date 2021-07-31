@@ -113,15 +113,46 @@ chrome.commands.onCommand.addListener((command) => {
                     "Access-Control-Allow-Origin": "*",
                   },
                 }
-                // { mode: "no-cors", headers: [["accept", "application/json"]],  }
               )
-              // console.log("result message:", msg)
               const text = response.data.results.join("")
 
               chrome.tabs.sendMessage(
                 tab.id as number,
                 {
                   type: "puan_result",
+                  text,
+                },
+                (msg) => {}
+              )
+            }
+          )
+        }
+      })
+    case "lu":
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        const tab = tabs[0]
+        if (tab.id) {
+          chrome.tabs.sendMessage(
+            tab.id,
+            {
+              type: "lu",
+            },
+            async (msg) => {
+              const response = await axios.get(
+                `https://kampuan-api.herokuapp.com/puan_lu/${msg}?translate_lu=false`,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                  },
+                }
+              )
+              const text = response.data.results.join("")
+
+              chrome.tabs.sendMessage(
+                tab.id as number,
+                {
+                  type: "lu_result",
                   text,
                 },
                 (msg) => {}

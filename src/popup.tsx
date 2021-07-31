@@ -114,6 +114,40 @@ const Popup = () => {
       }
     })
   }
+  const lu = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0]
+      if (tab.id) {
+        chrome.tabs.sendMessage(
+          tab.id,
+          {
+            type: "lu",
+          },
+          async (msg) => {
+            const response = await axios.get(
+              `https://kampuan-api.herokuapp.com/puan_lu/${msg}?translate_lu=false`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                },
+              }
+            )
+            const text = response.data.results.join("")
+
+            chrome.tabs.sendMessage(
+              tab.id as number,
+              {
+                type: "lu_result",
+                text,
+              },
+              (msg) => {}
+            )
+          }
+        )
+      }
+    })
+  }
 
   useEffect(() => {
     chrome.commands.getAll((commands) => {
@@ -137,6 +171,7 @@ const Popup = () => {
           shortcut: "",
         },
         { key: "puan", label: "ควนผำ", onClick: puan, shortcut: "" },
+        { key: "lu", label: "ลาภูหลาษูซูลี", onClick: lu, shortcut: "" },
       ]
 
       modes.forEach(({ key }, idx) => {
