@@ -2,13 +2,8 @@
   "manifest_version": 2,
 
   "name": "Lumken",
-  "description": "Chrome Extension, TypeScript, Visual Studio Code",
+  "description": "Thai text transforming extension for livestream chats",
   "version": "1.0",
-
-  "options_ui": {
-    "page": "options.html",
-    "chrome_style": true
-  },
 
   "browser_action": {
     "default_icon": "icon.png",
@@ -27,7 +22,6 @@
   },
 
   "permissions": [
-    "storage",
     "<all_urls>",
     "contextMenus",
     "activeTab",
